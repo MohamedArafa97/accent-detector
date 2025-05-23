@@ -18,7 +18,7 @@ This tool extracts audio from video, processes it with a Hugging Face audio clas
 
 To keep this demo lightweight and deployable on **Streamlit Cloud’s free tier**, a **smaller model** was used during deployment.
 
-However, **for best accuracy**,i tested the tool successfully using:
+However, **for best accuracy**, the tool is tested successfully using:
 
 > `ylacombe/accent-classifier` from Hugging Face  
 > This model achieved much better classification accuracy in local tests  
