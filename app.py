@@ -1,6 +1,7 @@
 import os
 os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
-
+import torch
+torch.classes.__path__ = []
 
 import streamlit as st
 import tempfile
