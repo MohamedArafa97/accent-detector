@@ -14,13 +14,17 @@ from speechbrain.pretrained.interfaces import foreign_class
 # Load model using custom interface
 @st.cache_resource
 def load_model():
-    os.environ["SPEECHBRAIN_CACHE"] = os.path.join(os.getcwd(), "models")
-    return foreign_class(
-        source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
-        pymodule_file="custom_interface.py",
-        classname="CustomEncoderWav2vec2Classifier"
-    )
-
+    try:
+        os.environ["SPEECHBRAIN_CACHE"] = os.path.join(os.getcwd(), "models")
+        return foreign_class(
+            source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
+            pymodule_file="custom_interface.py",
+            classname="CustomEncoderWav2vec2Classifier"
+        )
+    except Exception as e:
+        st.error(f"❌ Model failed to load: {e}")
+        raise
+        
 # Download video from a public URL
 def download_video(url, temp_dir):
     video_path = os.path.join(temp_dir, "video.mp4")
