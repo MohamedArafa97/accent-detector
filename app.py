@@ -1,13 +1,15 @@
+import os
+os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
+
+
 import streamlit as st
 import tempfile
-import os
 import requests
 import subprocess
 import torchaudio
 from speechbrain.pretrained.interfaces import foreign_class
 
 
-os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
 
 # Load model using custom interface
 @st.cache_resource
