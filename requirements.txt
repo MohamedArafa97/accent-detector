@@ -3,5 +3,5 @@ transformers>=4.30.0
 torch
 torchaudio
 soundfile
-imageio-ffmpeg
 requests
+imageio-ffmpeg

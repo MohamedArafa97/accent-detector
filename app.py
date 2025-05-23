@@ -1,4 +1,5 @@
 import os
+import torch
 import streamlit as st
 import tempfile
 import requests
@@ -6,7 +7,6 @@ import subprocess
 import torchaudio
 import imageio_ffmpeg
 from transformers import pipeline
-import torch
 
 
 # Set torchaudio backend
