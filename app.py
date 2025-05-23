@@ -6,6 +6,9 @@ import subprocess
 import torchaudio
 from speechbrain.pretrained.interfaces import foreign_class
 
+
+os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
+
 # Load model using custom interface
 @st.cache_resource
 def load_model():
