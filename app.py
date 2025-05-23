@@ -1,8 +1,13 @@
 import os
 os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
-import torch
-torch.classes.__path__ = []
 
+import torch
+if hasattr(torch, "classes"):
+    try:
+        torch.classes.__path__ = []
+    except Exception:
+        pass
+    
 import streamlit as st
 import tempfile
 import requests
@@ -54,9 +59,7 @@ def extract_audio(video_path, temp_dir):
         raise RuntimeError(f"FFmpeg failed: {e}")
     return audio_path
 
-# Classify audio file
 def classify_accent(audio_path, model):
-    torchaudio.set_audio_backend("soundfile")
     out_prob, score, index, label = model.classify_file(audio_path)
     return label, score * 100, out_prob
 
