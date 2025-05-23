@@ -1,12 +1,6 @@
 import os
-os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
+os.environ["SPEECHBRAIN_CACHE"] = "/data/speechbrain"
 
-import torch
-if hasattr(torch, "classes"):
-    try:
-        torch.classes.__path__ = []
-    except Exception:
-        pass
     
 import streamlit as st
 import tempfile
@@ -16,16 +10,15 @@ import torchaudio
 from speechbrain.pretrained.interfaces import foreign_class
 
 
-
-# Load model using custom interface
 @st.cache_resource
 def load_model():
     try:
-        os.environ["SPEECHBRAIN_CACHE"] = os.path.join(os.getcwd(), "models")
+        os.environ["SPEECHBRAIN_CACHE"] = "/data/speechbrain"
         return foreign_class(
             source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
             pymodule_file="custom_interface.py",
-            classname="CustomEncoderWav2vec2Classifier"
+            classname="CustomEncoderWav2vec2Classifier",
+            savedir="/data/speechbrain/accent-id"
         )
     except Exception as e:
         st.error(f"❌ Model failed to load: {e}")
