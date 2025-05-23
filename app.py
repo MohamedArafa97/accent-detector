@@ -8,7 +8,7 @@ import torchaudio
 import imageio_ffmpeg
 import numpy as np
 from transformers import Wav2Vec2Processor, Wav2Vec2ForSequenceClassification
-from transformers import AutoProcessor, AutoModelForAudioClassification
+import json
 
 # Streamlit config
 st.set_page_config(page_title="Accent Classifier", layout="centered")
@@ -20,20 +20,37 @@ video_url = st.text_input("Paste a direct link to a video (MP4 URL)")
 st.markdown("**OR**")
 uploaded_file = st.file_uploader("Upload a video file (MP4 format)", type=["mp4"])
 
-# Load model using Transformers directly
+# Load model using Wav2Vec2 directly
 @st.cache_resource
 def load_model():
     try:
         model_name = "Jzuluaga/accent-id-commonaccent_xlsr-en-english"
         
-        # Load processor and model
-        processor = AutoProcessor.from_pretrained(model_name)
-        model = AutoModelForAudioClassification.from_pretrained(model_name)
+        # Load processor (use wav2vec2 base processor)
+        processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base")
         
-        # Get label mappings
-        id2label = model.config.id2label
+        # Load the accent model with explicit configuration
+        model = Wav2Vec2ForSequenceClassification.from_pretrained(
+            model_name,
+            trust_remote_code=True,
+            ignore_mismatched_sizes=True
+        )
         
-        return processor, model, id2label
+        # Define accent labels manually (based on the model)
+        accent_labels = {
+            0: "australia",
+            1: "canada", 
+            2: "england",
+            3: "hongkong",
+            4: "india",
+            5: "ireland",
+            6: "newzealand",
+            7: "scotland",
+            8: "southatlandtic",
+            9: "us"
+        }
+        
+        return processor, model, accent_labels
     except Exception as e:
         st.error(f"❌ Model failed to load: {e}")
         raise
@@ -82,7 +99,7 @@ def load_audio(audio_path):
     return audio_array
 
 # Run classification
-def classify_accent(audio_path, processor, model, id2label):
+def classify_accent(audio_path, processor, model, accent_labels):
     # Load and preprocess audio
     audio_array = load_audio(audio_path)
     
@@ -97,7 +114,7 @@ def classify_accent(audio_path, processor, model, id2label):
     # Get predictions
     probabilities = torch.nn.functional.softmax(logits, dim=-1)
     predicted_class_id = torch.argmax(probabilities, dim=-1).item()
-    predicted_label = id2label[predicted_class_id]
+    predicted_label = accent_labels[predicted_class_id]
     confidence = probabilities[0][predicted_class_id].item() * 100
     
     return predicted_label, confidence, probabilities[0].numpy()
@@ -119,19 +136,19 @@ if uploaded_file or video_url:
                 audio_path = extract_audio(video_path, temp_dir)
                 
                 # Load model
-                processor, model, id2label = load_model()
+                processor, model, accent_labels = load_model()
                 
                 # Classify accent
-                label, confidence, probs = classify_accent(audio_path, processor, model, id2label)
+                label, confidence, probs = classify_accent(audio_path, processor, model, accent_labels)
                 
                 # Display results
-                st.success(f"Detected Accent: **{label}**")
+                st.success(f"Detected Accent: **{label.title()}**")
                 st.info(f"Confidence Score: **{confidence:.1f}%**")
                 
                 # Optional: Show all probabilities
                 with st.expander("View all accent probabilities"):
                     for i, prob in enumerate(probs):
-                        accent_name = id2label[i]
+                        accent_name = accent_labels[i].title()
                         st.write(f"{accent_name}: {prob * 100:.1f}%")
                         
         except Exception as e:
