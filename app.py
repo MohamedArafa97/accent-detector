@@ -1,6 +1,12 @@
 import os
-os.environ["SPEECHBRAIN_CACHE"] = "/data/speechbrain"
+import streamlit as st
 
+# Set app root dynamically
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+MODEL_CACHE_DIR = os.path.join(APP_ROOT, "model_cache")
+
+# Set SpeechBrain cache path
+os.environ["SPEECHBRAIN_CACHE"] = MODEL_CACHE_DIR
     
 import streamlit as st
 import tempfile
@@ -13,12 +19,11 @@ from speechbrain.pretrained.interfaces import foreign_class
 @st.cache_resource
 def load_model():
     try:
-        os.environ["SPEECHBRAIN_CACHE"] = "/data/speechbrain"
         return foreign_class(
             source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
             pymodule_file="custom_interface.py",
             classname="CustomEncoderWav2vec2Classifier",
-            savedir="/data/speechbrain/accent-id"
+            savedir=MODEL_CACHE_DIR
         )
     except Exception as e:
         st.error(f"❌ Model failed to load: {e}")
