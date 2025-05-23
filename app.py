@@ -6,6 +6,8 @@ import subprocess
 import torchaudio
 import imageio_ffmpeg
 from transformers import pipeline
+import torch
+
 
 # Set torchaudio backend
 torchaudio.set_audio_backend("soundfile")
@@ -57,13 +59,31 @@ def extract_audio(video_path, temp_dir):
         raise RuntimeError(f"FFmpeg failed: {e}")
 
 # Run inference and return top predictions
+import numpy as np
+
 def classify_accent(audio_path, classifier):
     try:
-        results = classifier(audio_path)
+        # Load audio as numpy using torchaudio
+        waveform, sample_rate = torchaudio.load(audio_path)
+
+        if waveform.shape[0] > 1:
+            waveform = torch.mean(waveform, dim=0, keepdim=True)
+
+        if sample_rate != 16000:
+            resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
+            waveform = resampler(waveform)
+
+        # Convert to numpy array
+        audio_array = waveform.squeeze().numpy()
+
+        # Run classification using numpy array
+        results = classifier(audio_array)
+
         sorted_results = sorted(results[0], key=lambda x: x['score'], reverse=True)
         top_label = sorted_results[0]['label']
         top_score = sorted_results[0]['score'] * 100
         return top_label, top_score, sorted_results
+
     except Exception as e:
         st.error(f"❌ Classification error: {e}")
         return "Unknown", 0.0, []
