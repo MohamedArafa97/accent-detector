@@ -31,7 +31,6 @@ However, **for best accuracy**,i tested the tool successfully using:
 
 #Sample Public Video URLs to Test
 
-https://ia800304.us.archive.org/23/items/ExpressEnglishDancing/Express%20English_%20Dancing.mp4
-
+(https://dn720400.ca.archive.org/0/items/how-to-do-an-american-accent-part-2-consonants-and-letter-combinations-amy-walker-360p-h.-264-aac/Common%20expressions%20-%20American%20Accent%20Tutorial%20_%20Amy%20Walker%28360p_H.264-AAC%29.mp4)
 
 
