@@ -63,7 +63,7 @@ import numpy as np
 
 def classify_accent(audio_path, classifier):
     try:
-        # Load audio as numpy using torchaudio
+        # Load and preprocess audio
         waveform, sample_rate = torchaudio.load(audio_path)
 
         if waveform.shape[0] > 1:
@@ -73,20 +73,25 @@ def classify_accent(audio_path, classifier):
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             waveform = resampler(waveform)
 
-        # Convert to numpy array
         audio_array = waveform.squeeze().numpy()
 
-        # Run classification using numpy array
-        results = classifier(audio_array)
+        # Run pipeline on audio array
+        results = classifier(audio_array, sampling_rate=16000, return_all_scores=True)
 
-        sorted_results = sorted(results[0], key=lambda x: x['score'], reverse=True)
+        # Some pipelines return a list of lists
+        if isinstance(results, list) and isinstance(results[0], list):
+            results = results[0]
+
+        sorted_results = sorted(results, key=lambda x: x['score'], reverse=True)
         top_label = sorted_results[0]['label']
         top_score = sorted_results[0]['score'] * 100
+
         return top_label, top_score, sorted_results
 
     except Exception as e:
         st.error(f"❌ Classification error: {e}")
         return "Unknown", 0.0, []
+
 
 # Main app logic
 if uploaded_file or video_url:
