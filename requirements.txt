@@ -1,0 +1,8 @@
+streamlit==1.45.1
+requests==2.32.3
+ffmpeg-python==0.2.0
+torchaudio==2.7.0
+torch==2.7.0
+transformers==4.52.2
+speechbrain==0.5.14
+soundfile==0.13.1
