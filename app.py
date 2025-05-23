@@ -40,7 +40,6 @@ def download_video(url, temp_dir):
             f.write(chunk)
     return video_path
 
-# Extract audio using bundled ffmpeg
 def extract_audio(video_path, temp_dir):
     audio_path = os.path.join(temp_dir, "audio.wav")
     ffmpeg_path = imageio_ffmpeg.get_ffmpeg_exe()
@@ -48,7 +47,9 @@ def extract_audio(video_path, temp_dir):
     command = [
         ffmpeg_path,
         "-y", "-i", video_path,
-        "-vn", "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1",
+        "-t", "60",                         # Limit to the first 60 seconds due to deployment limitation
+        "-vn", "-acodec", "pcm_s16le", 
+        "-ar", "16000", "-ac", "1",
         audio_path
     ]
 
@@ -89,7 +90,7 @@ def classify_accent(audio_path, classifier):
         return top_label, top_score, sorted_results
 
     except Exception as e:
-        st.error(f"❌ Classification error: {e}")
+        st.error(f" Classification error: {e}")
         return "Unknown", 0.0, []
 
 
@@ -120,4 +121,4 @@ if uploaded_file or video_url:
                 
 
         except Exception as e:
-            st.error(f"❌ Unexpected error: {str(e)}")
+            st.error(f" Unexpected error: {str(e)}")
