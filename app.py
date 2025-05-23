@@ -47,7 +47,7 @@ def extract_audio(video_path, temp_dir):
     command = [
         ffmpeg_path,
         "-y", "-i", video_path,
-        "-t", "60",                         # Limit to the first 60 seconds due to deployment limitation
+        "-t", "30",                         # Limit to the first 30 seconds due to deployment limitation
         "-vn", "-acodec", "pcm_s16le", 
         "-ar", "16000", "-ac", "1",
         audio_path
